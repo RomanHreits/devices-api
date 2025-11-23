@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS devices (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    brand VARCHAR(50) NOT NULL,
+    state VARCHAR(20) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (name, brand)
+);

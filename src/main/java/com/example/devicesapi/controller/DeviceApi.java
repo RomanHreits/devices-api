@@ -60,12 +60,11 @@ public interface DeviceApi {
                             ))),
                     @ApiResponse(responseCode = "400", description = "Invalid request parameters")
             })
-
     @GetMapping
     ResponseEntity<List<DeviceResponse>> getDevices(
             @Parameter(description = "Filter by device brand", example = "Apple")
             @RequestParam(value = "brand", required = false) String brand,
-            @Parameter(description = "filter be device state", example = "AVAILABLE")
+            @Parameter(description = "Filter be device state")
             @RequestParam(value = "state", required = false) State state);
 
     @Operation(summary = "Delete device by id", responses = {
