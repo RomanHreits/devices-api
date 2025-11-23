@@ -7,6 +7,9 @@ import com.example.devicesapi.model.PartialUpdateDeviceRequest;
 import com.example.devicesapi.model.State;
 import org.springframework.stereotype.Component;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+
 import static java.util.Optional.ofNullable;
 
 @Component
@@ -36,11 +39,15 @@ public class DeviceMapper {
     }
 
     public DeviceResponse fromEntityToDeviceResponse(DeviceEntity entity) {
+        OffsetDateTime created = ofNullable(entity.getCreatedAt())
+                .map(createdAt -> createdAt.atOffset(ZoneOffset.UTC))
+                .orElse(null);
+
         return new DeviceResponse(
                 entity.getId(),
                 entity.getName(),
                 entity.getBrand(),
                 entity.getState(),
-                entity.getCreatedAt().atOffset(java.time.ZoneOffset.UTC));
+                created);
     }
 }

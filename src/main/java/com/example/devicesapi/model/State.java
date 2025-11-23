@@ -1,5 +1,6 @@
 package com.example.devicesapi.model;
 
+import com.example.devicesapi.exception.InvalidInputPropertyException;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
@@ -28,7 +29,7 @@ public enum State {
                 return state;
             }
         }
-        throw new IllegalArgumentException("Unknown state: " + value);
+        throw new InvalidInputPropertyException("Unknown state value: " + value);
     }
 
     @Override

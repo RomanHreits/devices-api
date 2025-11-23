@@ -237,6 +237,17 @@ public class DeviceControllerTest {
     }
 
     @Test
+    public void testPartialUpdateDeviceWithInvalidStateValue() throws Exception {
+        String requestJson = """
+                {"state":"invalid-state"}""";
+
+        mockMvc.perform(patch("/devices/1").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Validation failed"))
+                .andExpect(jsonPath("$.details", containsString("Unknown state value:")));
+    }
+
+    @Test
     public void testPartialUpdateDeviceWhenDeviceDoesNotExist() throws Exception {
         String requestJson = """
                 {"state":"inactive"}""";
