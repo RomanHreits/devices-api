@@ -32,4 +32,10 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+
+    enabled = true
 }

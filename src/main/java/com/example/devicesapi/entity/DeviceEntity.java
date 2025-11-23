@@ -34,6 +34,15 @@ public class DeviceEntity {
         this.state = state;
     }
 
+    // Constructor including createdAt - using for testing purposes
+    public DeviceEntity(long id, String name, String brand, String state, Instant createdAt) {
+        this.id = id;
+        this.name = name;
+        this.brand = brand;
+        this.state = state;
+        this.createdAt = createdAt;
+    }
+
     public long getId() {
         return id;
     }

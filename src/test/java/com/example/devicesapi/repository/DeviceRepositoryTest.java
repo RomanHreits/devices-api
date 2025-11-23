@@ -28,6 +28,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -101,8 +102,11 @@ public class DeviceRepositoryTest {
                 entity.getId(),
                 UPDATED_NAME,
                 entity.getBrand(),
-                State.IN_USE.getValue()
+                State.IN_USE.getValue(),
+                Instant.now()
         );
+
+        assertNotEquals(createdAt, newEntity.getCreatedAt());
         assertDoesNotThrow(() -> deviceRepository.save(newEntity));
     }
 
