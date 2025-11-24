@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: ${SERVER_PORT:8081}
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
@@ -17,4 +17,4 @@ spring:
   sql:
     init:
       mode: always
-      schema-locations: classpath:init.sql
+      schema-locations: classpath:init.sql # should be always for local and test environments

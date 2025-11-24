@@ -371,3 +371,9 @@ Notes:
 - Some APIs prefer `204 No Content` for successful DELETE requests; 
 this service returns the deleted resource for convenience and clarity.
 
+## Future improvements
+- Add authentication & authorization (e.g., JWT, OAuth2)
+- Implement pagination for GET /devices
+- Add more detailed logging and monitoring
+- Implement caching for frequently accessed data
+- Expand functional tests to cover edge cases and error scenarios

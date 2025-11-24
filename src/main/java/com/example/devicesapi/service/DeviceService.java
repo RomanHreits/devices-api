@@ -30,6 +30,18 @@ public class DeviceService {
         this.deviceMapper = deviceMapper;
     }
 
+    /**
+     * Persist a new device and return its DTO.
+     *
+     * Steps:
+     * - Map request to {@code DeviceEntity}
+     * - Save entity via repository
+     * - Map saved entity to {@code DeviceResponse}
+     *
+     * @param deviceRequest the request with device data
+     * @return created {@code DeviceResponse}
+     * @throws DuplicatedDataException when a device with the same name and brand exists
+     */
     public DeviceResponse createDevice(CreateDeviceRequest deviceRequest) {
         logger.info("Creating new device with name: {} and brand: {}",
                 deviceRequest.name(), deviceRequest.brand());
@@ -44,12 +56,38 @@ public class DeviceService {
         }
     }
 
+    /**
+     * Fetch a device by id and return its DTO.
+     *
+     * Steps:
+     * - Query repository by id
+     * - Map entity to {@code DeviceResponse} if found
+     *
+     * @param id the device id
+     * @return {@code DeviceResponse} for the given id
+     * @throws ResourceNotFoundException when device not found
+     */
     public DeviceResponse getDeviceById(long id) {
         return deviceRepository.findById(id)
                 .map(deviceMapper::fromEntityToDeviceResponse)
                 .orElseThrow(() -> new ResourceNotFoundException("Device not found with id: " + id));
     }
 
+    /**
+     * Fully update an existing device and return updated DTO.
+     *
+     * Steps:
+     * - Load existing entity by id
+     * - Validate state (cannot update if IN_USE)
+     * - Map incoming request to entity preserving id and save
+     *
+     * @param id the device id
+     * @param deviceRequest the full device update request
+     * @return updated {@code DeviceResponse}
+     * @throws ResourceNotFoundException when device not found
+     * @throws BlockedResourceException when device is IN_USE
+     * @throws DuplicatedDataException when name+brand duplicates an existing device
+     */
     public DeviceResponse updateDevice(long id, CreateDeviceRequest deviceRequest) {
         DeviceEntity existingDevice = deviceRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Device not found with id: {}" + id));
@@ -69,6 +107,19 @@ public class DeviceService {
         }
     }
 
+    /**
+     * Delete a device by id and return the deleted device DTO (state before deletion).
+     *
+     * Steps:
+     * - Load existing entity by id
+     * - Validate state (cannot delete if IN_USE)
+     * - Delete via repository and return previous representation
+     *
+     * @param id the device id
+     * @return {@code DeviceResponse} representing the deleted device
+     * @throws ResourceNotFoundException when device not found
+     * @throws BlockedResourceException when device is IN_USE
+     */
     public DeviceResponse deleteDevice(long id) {
         Optional<DeviceEntity> optionalEntity = deviceRepository.findById(id);
         if (optionalEntity.isEmpty()) {
@@ -82,6 +133,22 @@ public class DeviceService {
         return deviceMapper.fromEntityToDeviceResponse(optionalEntity.get());
     }
 
+
+    /**
+     * Apply partial updates to a device and return updated DTO.
+     *
+     * Steps:
+     * - Load existing entity by id
+     * - Validate that name/brand are not changed when device is IN_USE
+     * - Apply partial changes and save
+     *
+     * @param id the device id
+     * @param updateRequest partial update request
+     * @return updated {@code DeviceResponse}
+     * @throws ResourceNotFoundException when device not found
+     * @throws BlockedResourceException when forbidden fields are modified on IN_USE device
+     * @throws DuplicatedDataException when name+brand duplicates an existing device
+     */
     public DeviceResponse partialUpdateDevice(long id, PartialUpdateDeviceRequest updateRequest) {
         logger.info("Starting partial update for device with id: {}", id);
         DeviceEntity existingDevice = deviceRepository.findById(id)
@@ -105,6 +172,17 @@ public class DeviceService {
         }
     }
 
+    /**
+     * Retrieve a list of devices optionally filtered by brand and/or state.
+     *
+     * Steps:
+     * - Choose repository query based on provided filters
+     * - Map resulting entities to {@code DeviceResponse} list
+     *
+     * @param brand optional brand filter
+     * @param state optional state filter
+     * @return list of {@code DeviceResponse} matching the provided filters
+     */
     public List<DeviceResponse> getDevices(String brand, State state) {
 
         List<DeviceEntity> entities;
