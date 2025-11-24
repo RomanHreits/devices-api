@@ -103,8 +103,7 @@ Success response (201 Created):
   "createdAt": "2025-11-24T12:00:00Z"
 }
 ```
-
-Validation failure (400 Bad Request)
+2) Create device (POST /devices)
 
 Request that triggers validation (missing required `name`):
 
@@ -113,6 +112,7 @@ curl -i -X POST "http://localhost:8081/devices" \
   -H "Content-Type: application/json" \
   -d '{}'
 ```
+Validation failure (400 Bad Request)
 
 Response example:
 
@@ -123,7 +123,7 @@ Response example:
 }
 ```
 
-Duplicate (409 Conflict)
+3) Create device (POST /devices)
 
 Curl to reproduce (try creating device when one with same name and brand exists):
 
@@ -132,6 +132,8 @@ curl -i -X POST "http://localhost:8081/devices" \
   -H "Content-Type: application/json" \
   -d '{"name":"Device A","brand":"newBrand"}'
 ```
+
+Duplicate (409 Conflict)
 
 Response example:
 
@@ -142,7 +144,7 @@ Response example:
 }
 ```
 
-2) Get all devices (GET /devices)
+4) Get all devices (GET /devices)
 
 Request:
 
@@ -164,7 +166,7 @@ Success response (200 OK):
 ]
 ```
 
-3) Get device by id (GET /devices/{id})
+5) Get device by id (GET /devices/{id})
 
 Request (existing id):
 
@@ -174,11 +176,26 @@ curl -i "http://localhost:8081/devices/1"
 
 Success response (200 OK): single object as above.
 
-Not found (404) — reproduce by requesting non-existing id:
+Response example:
+
+```json
+{
+  "id": 1,
+  "name": "Device A",
+  "brand": "newBrand",
+  "state": "inactive",
+  "createdAt": "2025-11-24T12:00:00Z"
+}
+```
+
+6) Get device by id (GET /devices/{id})
+
+Request (non-existing id):
 
 ```bash
 curl -i "http://localhost:8081/devices/99999"
 ```
+Not found (404) 
 
 Response example:
 
@@ -189,7 +206,7 @@ Response example:
 }
 ```
 
-4) Update device (PUT /devices/{id})
+7) Update device (PUT /devices/{id})
 
 Request (full update):
 
@@ -211,9 +228,8 @@ Success response (200 OK) — controller now returns the updated DeviceResponse:
 }
 ```
 
-Error responses follow the structured error bodies shown above (400/404/409/423 as applicable).
 
-5) Partial update (PATCH /devices/{id})
+8) Partial update (PATCH /devices/{id})
 
 Request (change only state):
 
@@ -234,7 +250,9 @@ Response example:
 }
 ```
 
-6) Update (PUT /devices/{id})
+9) Update (PUT /devices/{id})
+
+Request (full update):
 
 ```bash
 curl -i -X PUT "http://localhost:8081/devices/1" \
@@ -253,15 +271,17 @@ Response example:
 }
 ```
 
-7) Partial update (PATCH /devices/{id})
+10) Partial update (PATCH /devices/{id})
 
-Invalid enum value (400) — reproduce with an invalid state string:
+Request with invalid enum value:
 
 ```bash
 curl -i -X PATCH "http://localhost:8081/devices/1" \
   -H "Content-Type: application/json" \
   -d '{"state":"invalid-state"}'
 ```
+
+Invalid enum value (400) — reproduce with an invalid state string:
 
 Response example:
 
@@ -272,7 +292,7 @@ Response example:
 }
 ```
 
-8) Delete device (DELETE /devices/{id})
+11) Delete device (DELETE /devices/{id})
 
 Request:
 
@@ -291,7 +311,9 @@ Response example:
 }
 ```
 
-9) Partial update (PATCH /devices/{id})
+12) Partial update (PATCH /devices/{id})
+
+Request (change only state):
 
 ```bash
 curl -i -X PATCH "http://localhost:8081/devices/1" \
@@ -311,7 +333,7 @@ Success response (200 OK):
 }
 ```
 
-10) Delete device (DELETE /devices/{id})
+13) Delete device (DELETE /devices/{id})
 
 Request:
 
@@ -331,7 +353,7 @@ Success response (200 OK) — controller returns the deleted DeviceResponse (the
 }
 ```
 
-11) Get all devices to confirm deletion (GET /devices)
+14) Get all devices to confirm deletion (GET /devices)
 
 Request:
 
