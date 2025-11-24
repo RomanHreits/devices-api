@@ -5,7 +5,7 @@ services:
     image: postgres:14.4
     container_name: device_db
     environment:
-      POSTGRES_DB: devicedb
+      POSTGRES_DB: devicesdb
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
     volumes:
@@ -28,7 +28,7 @@ services:
       db:
         condition: service_healthy
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/devicedb
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/devicesdb
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: password
       # Enable remote debugging on port 5005
