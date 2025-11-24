@@ -68,7 +68,9 @@ public interface DeviceApi {
             @RequestParam(value = "state", required = false) State state);
 
     @Operation(summary = "Delete device by id", responses = {
-            @ApiResponse(responseCode = "204", description = "Device has been deleted successfully."),
+            @ApiResponse(responseCode = "200", description = "Device has been deleted successfully.",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = DeviceResponse.class))),
             @ApiResponse(responseCode = "404", description = "Device was not found, provided id is invalid.",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class))),
@@ -77,10 +79,12 @@ public interface DeviceApi {
                             schema = @Schema(implementation = ErrorResponse.class)))
     })
     @DeleteMapping("/{id}")
-    ResponseEntity<Void> deleteDevice(@PathVariable("id") long id);
+    ResponseEntity<DeviceResponse> deleteDevice(@PathVariable("id") long id);
 
     @Operation(summary = "Update device by id", responses = {
-            @ApiResponse(responseCode = "204", description = "Device has been updated successfully."),
+            @ApiResponse(responseCode = "200", description = "Device has been updated successfully.",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = DeviceResponse.class))),
             @ApiResponse(responseCode = "400", description = "Invalid input.",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class))),
@@ -92,11 +96,13 @@ public interface DeviceApi {
                             schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PutMapping("/{id}")
-    ResponseEntity<Void> updateDevice(@PathVariable("id") long id, @RequestBody @Valid CreateDeviceRequest request);
+    ResponseEntity<DeviceResponse> updateDevice(@PathVariable("id") long id, @RequestBody @Valid CreateDeviceRequest request);
 
 
     @Operation(summary = "Partially update device by id", responses = {
-            @ApiResponse(responseCode = "204", description = "Device has been updated successfully."),
+            @ApiResponse(responseCode = "200", description = "Device has been updated successfully.",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = DeviceResponse.class))),
             @ApiResponse(responseCode = "400", description = "Invalid input.",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class))),
@@ -108,5 +114,5 @@ public interface DeviceApi {
                             schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PatchMapping("/{id}")
-    ResponseEntity<Void> partialUpdate(@PathVariable("id") long id, @RequestBody PartialUpdateDeviceRequest request);
+    ResponseEntity<DeviceResponse> partialUpdate(@PathVariable("id") long id, @RequestBody PartialUpdateDeviceRequest request);
 }

@@ -18,6 +18,35 @@ repositories {
     mavenCentral()
 }
 
+sourceSets {
+    functionalTest {
+        java.srcDir file('src/functionalTest/java')
+        resources.srcDirs = [file('src/functionalTest/resources'), file('src/test/resources')]
+
+        compileClasspath += sourceSets.main.output + sourceSets.test.output + configurations.testCompileClasspath
+        runtimeClasspath += sourceSets.main.output + sourceSets.test.output + configurations.testRuntimeClasspath
+    }
+}
+
+configurations {
+    functionalTestImplementation.extendsFrom testImplementation
+    functionalTestRuntimeOnly.extendsFrom testRuntimeOnly
+}
+
+tasks.register('functionalTest', Test) {
+    description = 'Runs functional tests.'
+    group = 'verification'
+    testClassesDirs = sourceSets.functionalTest.output.classesDirs
+    classpath = sourceSets.functionalTest.runtimeClasspath
+    shouldRunAfter test
+    useJUnitPlatform()
+    systemProperty 'spring.profiles.active', 'test'
+
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-webmvc'
@@ -28,6 +57,8 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
     testImplementation 'org.testcontainers:postgresql:1.21.3'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    functionalTestImplementation 'org.springframework.boot:spring-boot-starter-restclient'
 }
 
 tasks.named('test') {
@@ -38,4 +69,8 @@ tasks.named('test') {
     }
 
     enabled = true
+}
+
+tasks.named('check') {
+    dependsOn tasks.named('functionalTest')
 }

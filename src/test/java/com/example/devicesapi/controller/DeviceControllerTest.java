@@ -125,10 +125,15 @@ public class DeviceControllerTest {
 
     @Test
     public void testDeleteDeviceById() throws Exception {
-        when(deviceService.getDeviceById(any(Long.class))).thenReturn(getDeviceResponse(State.INACTIVE));
+        DeviceResponse deviceResponse = getDeviceResponse(State.INACTIVE);
+        when(deviceService.deleteDevice(any(Long.class))).thenReturn(deviceResponse);
 
         mockMvc.perform(delete("/devices/1"))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(deviceResponse.id()))
+                .andExpect(jsonPath("$.name").value(deviceResponse.name()))
+                .andExpect(jsonPath("$.brand").value(deviceResponse.brand()))
+                .andExpect(jsonPath("$.state").value(deviceResponse.state()));;
     }
 
     @Test

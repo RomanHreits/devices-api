@@ -39,20 +39,17 @@ public class DeviceController implements DeviceApi {
     }
 
     @Override
-    public ResponseEntity<Void> deleteDevice(long id) {
-        deviceService.deleteDevice(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<DeviceResponse> deleteDevice(long id) {
+        return ResponseEntity.ok(deviceService.deleteDevice(id));
     }
 
     @Override
-    public ResponseEntity<Void> updateDevice(long id, CreateDeviceRequest request) {
-        deviceService.updateDevice(id, request);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<DeviceResponse> updateDevice(long id, CreateDeviceRequest request) {
+        return ResponseEntity.ok(deviceService.updateDevice(id, request));
     }
 
     @Override
-    public ResponseEntity<Void> partialUpdate(long id, PartialUpdateDeviceRequest request) {
-        deviceService.partialUpdateDevice(id, request);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<DeviceResponse> partialUpdate(long id, PartialUpdateDeviceRequest request) {
+        return ResponseEntity.ok(deviceService.partialUpdateDevice(id, request));
     }
 }

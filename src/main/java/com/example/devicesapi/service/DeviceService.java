@@ -69,7 +69,7 @@ public class DeviceService {
         }
     }
 
-    public void deleteDevice(long id) {
+    public DeviceResponse deleteDevice(long id) {
         Optional<DeviceEntity> optionalEntity = deviceRepository.findById(id);
         if (optionalEntity.isEmpty()) {
             logger.error("Attempted to delete non-existing device with id: {}", id);
@@ -79,6 +79,7 @@ public class DeviceService {
             throw new BlockedResourceException("Cannot delete a device that is currently IN_USE");
         }
         deviceRepository.deleteById(id);
+        return deviceMapper.fromEntityToDeviceResponse(optionalEntity.get());
     }
 
     public DeviceResponse partialUpdateDevice(long id, PartialUpdateDeviceRequest updateRequest) {
